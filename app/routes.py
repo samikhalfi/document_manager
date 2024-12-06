@@ -131,6 +131,11 @@ def administration():
 # Route to handle status checking of a request
 @main.route('/check_status/<request_id>')
 def check_status(request_id):
+    if not request_id:
+        # Flash a message and redirect to the request page if no ID is provided
+        flash("Vous n'avez aucune requête.", 'warning')
+        return redirect(url_for('main.request'))
+
     conn = get_db_connection()
     c = conn.cursor()
 
@@ -140,14 +145,15 @@ def check_status(request_id):
     conn.close()
 
     if request_data is None:
-        # If no request found, show a message
-        flash("Request not found. Please check your request ID.", 'warning')
-        return redirect(url_for('main.home'))  # Or redirect to any other page you want
+        # If no request found, flash a message and redirect
+        flash("Requête introuvable. Veuillez vérifier votre ID de requête.", 'warning')
+        return redirect(url_for('main.request_document'))  # Or redirect to another page if desired
 
     # Convert Row to a dictionary for rendering
     request_data = dict(request_data)
 
     return render_template('status.html', request_data=request_data)
+
 
 # Route to handle status updates (simplified)
 @main.route('/update_request_status', methods=['POST'])
