@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -20,30 +20,30 @@
                 <li>
                     <a href="/" class="nav-link">
                         <i class="fas fa-home"></i>
-                        <span>Home</span>
+                        <span>Accueil</span>
                     </a>
                 </li>
                 <li>
                     <a href="/request" class="nav-link">
                         <i class="fas fa-file-alt"></i>
-                        <span>Request Document</span>
+                        <span>Demander un document</span>
                     </a>
                 </li>
                 <li>
                     {% if session.get('request_id') %}
                     <a href="{{ url_for('main.check_status', request_id=session['request_id']) }}" class="nav-link">
                         <i class="fas fa-clipboard-list"></i>
-                        <span>Check Status</span>
+                        <span>Vérifier le statut</span>
                     </a>
                 {% else %}
-                    <p>No request found. Please submit a request first.</p>
+                    <p>Aucune demande trouvée. Veuillez soumettre une demande d'abord.</p>
                 {% endif %}
                   
                 </li>
                 
             </ul>
             <div class="sidebar-footer">
-                <p>&copy; 2024 Document Manager</p>
+                <p>&copy; 2024 Gestionnaire de documents</p>
             </div>
         </nav>
 
