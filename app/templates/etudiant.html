@@ -2,22 +2,25 @@
 
 {% block content %}
 <div class="home-container">
-    <!-- Section Héros -->
+    <!-- Section Hero -->
     <div class="home-hero">
         <div class="hero-content">
             <h1 class="hero-title">Gestionnaire de Documents</h1>
-            <p class="hero-subtitle">Optimisez votre flux de travail pour les documents académiques</p>
+            <p class="hero-subtitle">Simplifiez la gestion de vos documents académiques</p>
             <p class="hero-description">
-                Demandez, suivez et téléchargez facilement vos documents académiques
-                en quelques clics. Gagnez du temps et réduisez les tracas administratifs.
+                Demandez, suivez et téléchargez facilement vos documents académiques en quelques clics. Gagnez du temps et réduisez les tracas administratifs.
             </p>
             <div class="hero-actions">
                 <a href="/request" class="btn btn-primary">
-                    <i class="fas fa-file-alt"></i> Demander un Document
+                    <i class="fas fa-file-alt"></i> Demander un document
                 </a>
-                <a href="/status" class="btn btn-secondary">
-                    <i class="fas fa-clipboard-list"></i> Vérifier le Statut
+                {% if session.get('request_id') %}
+                <a href="{{ url_for('main.check_status', request_id=session['request_id']) }}" class="btn btn-secondary">
+                    <i class="fas fa-clipboard-list"></i> Vérifier le statut
                 </a>
+                {% else %}
+                <p>No request found. Please submit a request first.</p>
+                {% endif %}
             </div>
         </div>
         <div class="hero-illustration">
@@ -46,8 +49,8 @@
     <div class="home-features">
         <div class="feature">
             <i class="fas fa-file-upload"></i>
-            <h3>Demandes Faciles</h3>
-            <p>Soumettez des demandes de documents rapidement et efficacement</p>
+            <h3>Demandes Simples</h3>
+            <p>Soumettez vos demandes de documents rapidement et efficacement</p>
         </div>
         <div class="feature">
             <i class="fas fa-eye"></i>
