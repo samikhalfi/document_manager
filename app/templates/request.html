@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="app-container">
+    <div class="content-wrapper">
+        <div class="content-header">
+            <div class="header-title">
+                <h2>Demande de Documents Administratifs</h2>
+            </div>
+        </div>  
+
+        <div class="content-area">
+            <div class="home-container">
+                <div class="home-hero"> 
+                    <div class="hero-content">
+                        <h1 class="hero-title">Demandez vos Documents</h1>
+                        <p class="hero-subtitle">Simplifiez vos démarches administratives</p>
+                        <p class="hero-description">Sélectionnez le document que vous souhaitez demander et remplissez le formulaire correspondant.</p>
+                    </div>
+                </div>
+
+                <div class="document-icons">
+                    <div class="document-icon" data-target="attestation">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Attestation d'Absence</span>
+                    </div>
+                    <div class="document-icon" data-target="report">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Relevé de Notes</span>
+                    </div>
+                    <div class="document-icon" data-target="transcript">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Certificat de Scolarité</span>
+                    </div>
+                    <div class="document-icon" data-target="internship">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Convention de Stage</span>
+                    </div>
+                </div>
+
+                <!-- Dynamic Request Form Modal -->
+                <div id="requestFormContainer" class="modal fade" tabindex="-1" role="dialog" style="display: none;">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalTitle">Demande de Document</h5>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Form Container -->
+                                <form id="documentRequestForm" action="{{ url_for('main.request_document') }}" method="POST" class="request-form">
+                                    <input type="hidden" id="document_type" name="document_type" value="">
+
+                                    <!-- Shared Fields -->
+                                    <div class="form-group">
+                                        <label for="name">Votre Nom</label>
+                                        <input type="text" id="name" name="name" class="form-control" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="email">Votre Email</label>
+                                        <input type="email" id="email" name="email" class="form-control" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="message">Détails de la Demande</label>
+                                        <textarea id="message" name="message" class="form-control" rows="4" required placeholder="Précisez les détails de votre demande"></textarea>
+                                    </div>
+
+                                    <!-- Conditional Fields (Dynamic Loading) -->
+                                    <div id="additionalFields"></div>
+
+                                    <button type="submit" class="btn btn-primary">Soumettre la Demande</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Service Administratif. Tous droits réservés.</p>
+        </footer>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const documentIcons = document.querySelectorAll('.document-icon');
+    const documentTypeInput = document.getElementById('document_type');
+    const modalTitle = document.getElementById('modalTitle');
+    const additionalFieldsContainer = document.getElementById('additionalFields');
+    
+    // Document type mappings with forms
+    const documentTypes = {
+        'attestation': {
+            title: 'Demande d\'Attestation d\'Absence',
+            fields: ` 
+                <div class="form-group">
+                    <label for="start_date">Date de Début</label>
+                    <input type="date" id="start_date" name="start_date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="end_date">Date de Fin</label>
+                    <input type="date" id="end_date" name="end_date" class="form-control" required>
+                </div>
+            `
+        },
+        'report': {
+            title: 'Demande de Relevé de Notes',
+            fields: `
+                <div class="form-group">
+                    <label for="year">Année</label>
+                    <input type="number" id="year" name="year" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="semester">Semestre</label>
+                    <select id="semester" name="semester" class="form-control" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+            `
+        },
+        'transcript': {
+            title: 'Demande de Certificat de Scolarité',
+            fields: `
+                <div class="form-group">
+                    <label for="academic_year">Année Scolaire</label>
+                    <input type="text" id="academic_year" name="academic_year" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="specialization">Spécialité</label>
+                    <input type="text" id="specialization" name="specialization" class="form-control" required>
+                </div>
+            `
+        },
+        'internship': {
+            title: 'Demande de Convention de Stage',
+            fields: `
+                <div class="form-group">
+                    <label for="company">Entreprise</label>
+                    <input type="text" id="company" name="company" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="duration">Durée du Stage</label>
+                    <input type="text" id="duration" name="duration" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="supervisor">Tuteur</label>
+                    <input type="text" id="supervisor" name="supervisor" class="form-control" required>
+                </div>
+            `
+        }
+    };
+
+    documentIcons.forEach(icon => {
+        icon.addEventListener('click', function() {
+            const documentType = this.getAttribute('data-target');
+            
+            // Set document type and modal title
+            documentTypeInput.value = documentType;
+            modalTitle.textContent = documentTypes[documentType]?.title || 'Demande de Document';
+            
+            // Load specific fields for the document type
+            additionalFieldsContainer.innerHTML = documentTypes[documentType]?.fields || '';
+
+            // Show the modal
+            const modal = document.getElementById('requestFormContainer');
+            modal.style.display = 'block';
+            
+            // Use Bootstrap's modal method if available
+            if (window.bootstrap && window.bootstrap.Modal) {
+                new bootstrap.Modal(modal).show();
+            }
+        });
+    });
+
+    // Close button functionality
+    const closeButtons = document.querySelectorAll('.close');
+    closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const modal = this.closest('.modal');
+            modal.style.display = 'none';
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="home-container">
+    <!-- Hero Section -->
+    <div class="home-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Document Manager</h1>
+            <p class="hero-subtitle">Streamline Your Academic Document Workflow</p>
+            <p class="hero-description">
+                Easily request, track, and download your academic documents 
+                with just a few clicks. Save time and reduce administrative hassle.
+            </p>
+            <div class="hero-actions">
+                <a href="/request" class="btn btn-primary">
+                    <i class="fas fa-file-alt"></i> Request a Document
+                </a>
+                <a href="/status" class="btn btn-secondary">
+                    <i class="fas fa-clipboard-list"></i> Check Status
+                </a>
+            </div>
+        </div>
+        <div class="hero-illustration">
+            <div class="document-icons1">
+                <div class="document-icon attestation">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Attestation</span>
+                </div>
+                <div class="document-icon absence">
+                    <i class="fas fa-calendar-times"></i>
+                    <span>Absence Report</span>
+                </div>
+                <div class="document-icon grades">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Grade Transcript</span>
+                </div>
+                <div class="document-icon internship">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Internship Agreement</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="home-features">
+        <div class="feature">
+            <i class="fas fa-file-upload"></i>
+            <h3>Easy Requests</h3>
+            <p>Submit document requests quickly and efficiently</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-eye"></i>
+            <h3>Real-time Tracking</h3>
+            <p>Monitor the status of your document requests</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-download"></i>
+            <h3>Instant Downloads</h3>
+            <p>Download approved documents instantly</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

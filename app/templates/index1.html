@@ -1,0 +1,12 @@
+
+
+{% block content %}
+<div class="landing-container">
+    <h1>Welcome to the Document Manager</h1>
+    <p>Please choose your section:</p>
+    <div class="landing-buttons">
+        <a href="{{ url_for('main.etudiant') }}" class="btn btn-primary">Étudiant</a>
+        <a href="{{ url_for('main.administration') }}" class="btn btn-secondary">Administration</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>DM</h1>
+            </div>
+            <ul class="nav-menu">
+                <li>
+                    <a href="/" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/request" class="nav-link">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Request Document</span>
+                    </a>
+                </li>
+                <li>
+                    {% if session.get('request_id') %}
+                    <a href="{{ url_for('main.check_status', request_id=session['request_id']) }}" class="nav-link">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Check Status</span>
+                    </a>
+                {% else %}
+                    <p>No request found. Please submit a request first.</p>
+                {% endif %}
+                  
+                </li>
+                
+            </ul>
+            <div class="sidebar-footer">
+                <p>&copy; 2024 Document Manager</p>
+            </div>
+        </nav>
+
+        <main class="content-wrapper">
+            <header class="content-header">
+                <div class="header-title">
+                    <h2>{{ title }}</h2>
+                </div>
+                <div class="user-profile">
+                    <div class="user-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-area">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+
+</html>
