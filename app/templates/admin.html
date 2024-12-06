@@ -8,29 +8,29 @@
         </div>
     </div>
 
-    <!-- Toast Notification Container -->
+    <!-- Conteneur de notification Toast -->
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11;">
         <div id="statusToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
-                <strong class="me-auto">Status Update</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                <strong class="me-auto">Mise à jour du statut</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Fermer"></button>
             </div>
             <div class="toast-body" id="toastMessage">
-                <!-- Dynamic toast message will be inserted here -->
+                <!-- Message dynamique Toast sera inséré ici -->
             </div>
         </div>
     </div>
 
     <div class="content-area">
-        <h3>Requests List</h3>
+        <h3>Liste des Demandes</h3>
 
-        <!-- Display Flash Messages (Success or Error) -->
+        <!-- Affichage des messages Flash (Succès ou Erreur) -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
                     <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
                         {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
                     </div>
                 {% endfor %}
             {% endif %}
@@ -40,12 +40,12 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Nom</th>
                         <th>Email</th>
-                        <th>Document Type</th>
-                        <th>Status</th>
+                        <th>Type de Document</th>
+                        <th>Statut</th>
                         <th>Actions</th>
-                        <th>Upload Document</th>
+                        <th>Téléverser Document</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,7 +73,7 @@
                                         <option value="Approuvé" {% if request.status == 'Approuvé' %}selected{% endif %}>Approuvé</option>
                                         <option value="Rejeté" {% if request.status == 'Rejeté' %}selected{% endif %}>Rejeté</option>
                                     </select>
-                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                    <button type="submit" class="btn btn-sm btn-primary">Mettre à jour</button>
                                 </div>
                             </form>
                         </td>
@@ -86,11 +86,11 @@
                                            class="form-control form-control-sm" 
                                            accept=".pdf,.doc,.docx,.jpg,.png" 
                                            required>
-                                    <button type="submit" class="btn btn-sm btn-success">Upload</button>
+                                    <button type="submit" class="btn btn-sm btn-success">Téléverser</button>
                                 </div>
                             </form>
                             {% else %}
-                            <span class="text-muted">Not available</span>
+                            <span class="text-muted">Indisponible</span>
                             {% endif %}
                         </td>
                     </tr>
@@ -108,12 +108,12 @@
 
 <script>
     $(document).ready(function() {
-        // Create toast instance
+        // Créer une instance Toast
         var statusToast = new bootstrap.Toast(document.getElementById('statusToast'), {
-            delay: 3000 // Auto-hide after 3 seconds
+            delay: 3000 // Auto-masquer après 3 secondes
         });
 
-        // Handle status form submissions via AJAX
+        // Gérer les soumissions de formulaire de statut via AJAX
         $('.status-form').on('submit', function(e) {
             e.preventDefault();
             var form = $(this);
@@ -123,11 +123,11 @@
                 url: form.attr('action'),
                 data: form.serialize(),
                 success: function(response) {
-                    // Update the status badge and select
+                    // Mettre à jour le badge de statut et la sélection
                     var row = form.closest('tr');
                     var newStatus = form.find('select[name="status"]').val();
                     
-                    // Update status badge
+                    // Mettre à jour le badge de statut
                     var badgeClasses = {
                         'En cours': 'bg-warning',
                         'Approuvé': 'bg-success', 
@@ -138,15 +138,15 @@
                        .addClass(badgeClasses[newStatus])
                        .text(newStatus);
                     
-                    // Show toast notification
-                    $('#toastMessage').text(`Request status updated to ${newStatus}`);
+                    // Afficher la notification Toast
+                    $('#toastMessage').text(`Statut de la demande mis à jour : ${newStatus}`);
                     $('#toastMessage').removeClass('bg-danger bg-success bg-warning')
                                       .addClass(badgeClasses[newStatus]);
                     statusToast.show();
                 },
                 error: function() {
-                    // Show error toast
-                    $('#toastMessage').text('Failed to update status. Please try again.');
+                    // Afficher une notification d'erreur Toast
+                    $('#toastMessage').text('Échec de la mise à jour du statut. Veuillez réessayer.');
                     $('#toastMessage').removeClass('bg-danger bg-success bg-warning')
                                       .addClass('bg-danger');
                     statusToast.show();
@@ -154,7 +154,7 @@
             });
         });
 
-        // Dynamically show upload button when file is selected
+        // Afficher dynamiquement le bouton de téléversement lorsque le fichier est sélectionné
         $('input[type="file"]').on('change', function() {
             var submitBtn = $(this).siblings('button[type="submit"]');
             submitBtn.prop('disabled', !this.files.length);
